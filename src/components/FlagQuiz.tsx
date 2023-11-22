@@ -93,8 +93,6 @@ export default function FlagQuiz() {
     return () => clearTimeout(timerId);
   }, [startGame, timeRemaining, gameOver]);
 
-
-
   const handleAnswer = (country: CountryData) => {
     if (country.name === flag?.name) {
       setMessage(true);
@@ -160,27 +158,18 @@ export default function FlagQuiz() {
               <div className="m-auto">
                 {loading && (
                   <div
-                    className="flag-image-container m-6"
+                    className="flag-image-container m-6 relative"
                     style={{
                       width: "400px",
                       height: "250px",
                       backgroundColor: "#eee",
-                      position: "relative",
                     }}
                   >
-                    <div
-                      className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                      role="status"
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                      }}
-                    >
-                      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                        Loading...
-                      </span>
+                    <div className="flex items-center justify-center h-full">
+                      <div className="relative">
+                        <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
+                        <div className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -196,7 +185,7 @@ export default function FlagQuiz() {
                       style={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover",
+                        objectFit: "contain",
                       }}
                     />
                   </div>
@@ -278,7 +267,7 @@ export default function FlagQuiz() {
         </div>
       )}
       {gameOver && <GameOver score={score} onPlayAgain={handlePlayAgain} />}
-      {!startGame && !gameOver &&(
+      {!startGame && !gameOver && (
         <div className="fle p-8 flex-col">
           <h1 className="p-4 text-xl text-center font-bold">Welcome to</h1>
           <h1 className="text-center text-4xl">

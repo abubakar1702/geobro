@@ -17,8 +17,8 @@ export default function GameOver({ score, onPlayAgain  }: GameOverProps) {
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <div className="text-center">
-        <h1 className="text-6xl">Game Over</h1>
-        <h1>Your Score is: {score}</h1>
+        <h1 className="text-6xl p-4">Game Over</h1>
+        <h1 className="my-6 text-xl">Your score is: <span className={`${score < 0 ? "text-red-600" : "text-green-600"}`}>{score}</span></h1>
       </div>
 
       <button onClick={handlePlayAgain} className="bg-sky-500 px-10 py-4 rounded flex items-center mt-4">
