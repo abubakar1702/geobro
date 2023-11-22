@@ -4,9 +4,9 @@ import GuessTheFlag from '@/components/GuessTheFlag'
 
 export default function Home() {
   return (
-    <main className="flex w-3/6 flex-col items-center justify-center m-auto p-2">
+    <main className="flex flex-col items-center justify-center m-auto">
       <>
-      <GuessTheFlag />
+      <FlagQuiz />
       </>
     </main>
   )

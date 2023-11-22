@@ -79,11 +79,6 @@ export default function GuessTheFlag() {
     fetchData();
   };
 
-  let time = 4000
-  setTimeout(()=>{
-    console.log("Time out")
-  },time)
-
   const handleStart=()=>{
     setStart(true)
   }
@@ -99,7 +94,7 @@ export default function GuessTheFlag() {
           Bro
         </span>
       </h1>
-      <div className="flex justify-center my-8">
+      {/* <div className="flex justify-center my-8">
         <select className="p-2 rounded-md bg-slate-500 text-white">
           {[...Array(10)].map((_, index) => (
             <option key={index + 1} value={index + 1}>
@@ -107,7 +102,7 @@ export default function GuessTheFlag() {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
       <div className="flex justify-center my-8">
         <button onClick={handleStart} className="bg-sky-500 px-10 py-4 rounded">
           Start <FontAwesomeIcon icon={faArrowRight} />
