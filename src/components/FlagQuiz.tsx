@@ -2,7 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEarth, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 import GameOver from "./GameOver";
 
@@ -34,7 +34,6 @@ export default function FlagQuiz() {
       );
       const countries = response.data;
 
-      // Filter out flags that have already been shown
       const filteredCountries = countries.filter(
         (country) => !oldFlags.some((oldFlag) => oldFlag?.name === country.name)
       );
@@ -60,7 +59,6 @@ export default function FlagQuiz() {
       );
       setFlag(randomCountries[randomSelectedIndex]);
 
-      // Update oldFlags with the current flag
       setOldFlags((prev) => [...prev, flag]);
 
       setLoading(false);
@@ -83,13 +81,11 @@ export default function FlagQuiz() {
       }, 1000);
     }
 
-    // Check if time has reached 0, set gameOver to true
     if (timeRemaining === 0) {
       setGameOver(true);
-      setStartGame(false); // Optionally, stop the game when time reaches 0
+      setStartGame(false);
     }
 
-    // Clean up the timer when the component is unmounted or when the game is over
     return () => clearTimeout(timerId);
   }, [startGame, timeRemaining, gameOver]);
 
@@ -109,12 +105,12 @@ export default function FlagQuiz() {
     fetchData();
   };
   const handleNextButton = () => {
-    setFlag(null); // Reset the current flag
-    setOldFlags((prev) => [...prev, flag]); // Move the current flag to oldFlags
-    setMessage(false); // Reset the message state
-    setWrong(false); // Reset the wrong state
-    setShow(true); // Show the buttons again
-    fetchData(); // Fetch a new set of flags
+    setFlag(null);
+    setOldFlags((prev) => [...prev, flag]);
+    setMessage(false);
+    setWrong(false);
+    setShow(true);
+    fetchData();
   };
   const handleStartGame = () => {
     setStartGame(true);
