@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import FlagQuiz from '@/components/FlagQuiz'
-import GuessTheFlag from '@/components/GuessTheFlag'
 
 export default function Home() {
   return (

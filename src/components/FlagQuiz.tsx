@@ -2,7 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEarth, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import axios, { AxiosResponse } from "axios";
 import GameOver from "./GameOver";
 
@@ -25,6 +25,9 @@ export default function FlagQuiz() {
   const [show, setShow] = useState(true);
   const [message, setMessage] = useState(false);
   const [startGame, setStartGame] = useState(false);
+  const [rightAns, setRightAns] = useState(0);
+  const [wrongAns, setWrongAns] = useState(0);
+  const [selectedValue, setSelectedValue] = useState<number>(1);
 
   const fetchData = async () => {
     try {
@@ -74,27 +77,30 @@ export default function FlagQuiz() {
 
   useEffect(() => {
     let timerId: NodeJS.Timeout;
-
+  
     if (startGame && timeRemaining > 0) {
       timerId = setTimeout(() => {
         setTimeRemaining(timeRemaining - 1);
       }, 1000);
     }
-
+  
     if (timeRemaining === 0) {
       setGameOver(true);
       setStartGame(false);
     }
-
+  
     return () => clearTimeout(timerId);
   }, [startGame, timeRemaining, gameOver]);
+  
 
   const handleAnswer = (country: CountryData) => {
     if (country.name === flag?.name) {
       setMessage(true);
       setScore((prev) => prev + 10);
+      setRightAns((prev) => prev + 1);
     } else {
       setScore((prev) => prev - 10);
+      setWrongAns((prev) => prev + 1);
       setShow(false);
       setWrong(true);
     }
@@ -115,7 +121,7 @@ export default function FlagQuiz() {
   const handleStartGame = () => {
     setStartGame(true);
     setGameOver(false);
-    setTimeRemaining(60);
+    setTimeRemaining(selectedValue * 60);
   };
 
   const handlePlayAgain = () => {
@@ -130,8 +136,18 @@ export default function FlagQuiz() {
     setShow(true);
     setMessage(false);
     setStartGame(true);
+    setRightAns(0);
+    setWrongAns(0);
     fetchData();
   };
+
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const minutes = Number(event.target.value);
+    setTimeRemaining(Number(event.target.value) * 60);
+    setSelectedValue(Number(event.target.value));
+  };
+
+  
   return (
     <>
       {startGame && (
@@ -144,6 +160,10 @@ export default function FlagQuiz() {
               >
                 {score}
               </span>{" "}
+            </h1>
+            <h1 className="text-cernter">
+              Right: <span className="text-green-600">{rightAns}</span> | Wrong:{" "}
+              <span className="text-red-600">{wrongAns}</span>
             </h1>
           </div>
           <div className="flex justify-center">
@@ -176,7 +196,6 @@ export default function FlagQuiz() {
                   >
                     <img
                       src={flag.flags.png}
-                      alt={`Flag of ${flag.name}`}
                       className="flag-image"
                       style={{
                         width: "100%",
@@ -189,11 +208,11 @@ export default function FlagQuiz() {
               </div>
             </div>
             {show && (
-              <div className={`flex ${message && "hidden"} justify-center`}>
+              <div className={`flex ${message && "hidden"} justify-center mx-4`}>
                 <div className="flex flex-col">
                   {fourRandomCountry.slice(0, 2).map((country, index) => (
                     <button
-                      className="p-4 font-bold h-24 w-48 border-solid border-4 border-blue-600 rounded-md m-2"
+                      className="p-4 font-bold h-24 w-40 border-solid border-4 border-sky-600 rounded-md m-2"
                       onClick={() => handleAnswer(country)}
                       key={index}
                     >
@@ -204,7 +223,7 @@ export default function FlagQuiz() {
                 <div className="flex flex-col">
                   {fourRandomCountry.slice(2, 4).map((country, index) => (
                     <button
-                      className="p-4 font-bold w-48 h-24 border-solid border-4 border-blue-600 rounded-md m-2"
+                      className="p-4 font-bold w-40 h-24 border-solid border-4 border-sky-600 rounded-md m-2"
                       onClick={() => handleAnswer(country)}
                       key={index + 2}
                     >
@@ -262,7 +281,14 @@ export default function FlagQuiz() {
           </div>
         </div>
       )}
-      {gameOver && <GameOver score={score} onPlayAgain={handlePlayAgain} />}
+      {gameOver && (
+        <GameOver
+          score={score}
+          right={rightAns}
+          wrong={wrongAns}
+          onPlayAgain={handlePlayAgain}
+        />
+      )}
       {!startGame && !gameOver && (
         <div className="fle p-8 flex-col">
           <h1 className="p-4 text-xl text-center font-bold">Welcome to</h1>
@@ -273,6 +299,19 @@ export default function FlagQuiz() {
               Bro
             </span>
           </h1>
+          <div className="flex justify-center my-8">
+            <select
+              className="p-2 rounded-md bg-slate-500 text-white px-6"
+              value={selectedValue}
+              onChange={handleSelectChange}
+            >
+              {[...Array(5)].map((_, index) => (
+                <option key={index + 1} value={index + 1}>
+                  {index + 1} minute
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="flex justify-center my-8">
             <button
               onClick={handleStartGame}
