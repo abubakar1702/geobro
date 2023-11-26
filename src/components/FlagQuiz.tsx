@@ -196,7 +196,7 @@ export default function FlagQuiz() {
                   >
                     <img
                       src={flag.flags.png}
-                      className="flag-image object-contain w-[98%] p-6"
+                      className="flag-image object-contain w-[98%] p-6 h-full"
                     />
                   </div>
                 )}
