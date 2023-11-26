@@ -153,7 +153,7 @@ export default function FlagQuiz() {
       {startGame && (
         <div className="h-full flex flex-col justify-center">
           <div className="flex flex-col items-center">
-            <h1 className="text-4xl my-4 text-center">
+            <h1 className="text-2xl md:text-4xl my-2 md:my-4 text-center">
               Score:{" "}
               <span
                 className={`${score < 0 ? "text-red-600" : "text-green-600"}`}
