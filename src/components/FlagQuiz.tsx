@@ -196,13 +196,7 @@ export default function FlagQuiz() {
                   >
                     <img
                       src={flag.flags.png}
-                      className="flag-image"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
-                        padding: "20px"
-                      }}
+                      className="flag-image object-contain w-[98%] p-6"
                     />
                   </div>
                 )}
