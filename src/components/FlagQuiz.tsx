@@ -77,21 +77,20 @@ export default function FlagQuiz() {
 
   useEffect(() => {
     let timerId: NodeJS.Timeout;
-  
+
     if (startGame && timeRemaining > 0) {
       timerId = setTimeout(() => {
         setTimeRemaining(timeRemaining - 1);
       }, 1000);
     }
-  
+
     if (timeRemaining === 0) {
       setGameOver(true);
       setStartGame(false);
     }
-  
+
     return () => clearTimeout(timerId);
   }, [startGame, timeRemaining, gameOver]);
-  
 
   const handleAnswer = (country: CountryData) => {
     if (country.name === flag?.name) {
@@ -147,7 +146,6 @@ export default function FlagQuiz() {
     setSelectedValue(Number(event.target.value));
   };
 
-  
   return (
     <>
       {startGame && (
@@ -169,7 +167,7 @@ export default function FlagQuiz() {
           <div className="flex justify-center">
             Time Remaining: {timeRemaining} seconds
           </div>
-          <div>
+          <div className="bg-[#E8E8E8]">
             <div className="flex justify-center">
               <div className="m-auto">
                 {loading && (
@@ -203,11 +201,13 @@ export default function FlagQuiz() {
               </div>
             </div>
             {show && (
-              <div className={`flex ${message && "hidden"} justify-center mx-4`}>
+              <div
+                className={`flex ${message && "hidden"} justify-center mx-4`}
+              >
                 <div className="flex flex-col">
                   {fourRandomCountry.slice(0, 2).map((country, index) => (
                     <button
-                      className="p-2 font-bold h-24 md:h-28 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2"
+                      className="p-2 font-bold h-24 md:h-28 bg-sky-300 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2 text-xs md:text-base overflow-hidden"
                       onClick={() => handleAnswer(country)}
                       key={index}
                     >
@@ -218,7 +218,7 @@ export default function FlagQuiz() {
                 <div className="flex flex-col">
                   {fourRandomCountry.slice(2, 4).map((country, index) => (
                     <button
-                      className="p-2 font-bold h-24 md:h-28 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2"
+                      className="p-2 font-bold h-24 md:h-28 bg-sky-300 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2 text-xs md:text-base overflow-hidden"
                       onClick={() => handleAnswer(country)}
                       key={index + 2}
                     >
