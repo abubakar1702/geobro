@@ -213,7 +213,7 @@ export default function FlagQuiz() {
                 <div className="flex flex-col">
                   {fourRandomCountry.slice(0, 2).map((country, index) => (
                     <button
-                      className="p-2 font-bold h-20 md:h-28 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2"
+                      className="p-2 font-bold h-24 md:h-28 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2"
                       onClick={() => handleAnswer(country)}
                       key={index}
                     >
@@ -224,7 +224,7 @@ export default function FlagQuiz() {
                 <div className="flex flex-col">
                   {fourRandomCountry.slice(2, 4).map((country, index) => (
                     <button
-                      className="p-2 font-bold h-20 md:h-28 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2"
+                      className="p-2 font-bold h-24 md:h-28 w-36 md:w-40 border-solid border-4 border-sky-600 rounded-md m-2"
                       onClick={() => handleAnswer(country)}
                       key={index + 2}
                     >
