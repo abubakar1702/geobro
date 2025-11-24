@@ -13,19 +13,6 @@ export default function Navbar() {
           <span className="tracking-tight">Bro</span>
         </Link>
 
-        <ul className="flex items-center gap-6 text-sm font-semibold uppercase tracking-wider text-white/70">
-          <li>
-            <Link className="transition hover:text-white" href="/">
-              Map Hunt
-            </Link>
-          </li>
-          <li>
-            <Link className="transition hover:text-white" href="/countries">
-              Country Explorer
-            </Link>
-          </li>
-        </ul>
-
         <div className="flex items-center gap-3">
           <Link
             href="/#map-stage"

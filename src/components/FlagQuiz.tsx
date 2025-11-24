@@ -130,19 +130,24 @@ export default function FlagQuiz() {
   useEffect(() => {
     let timerId: NodeJS.Timeout;
 
-    if (startGame && timeRemaining > 0) {
+    if (startGame && timeRemaining > 0 && selectedValue !== 0) {
       timerId = setTimeout(() => {
         setTimeRemaining(timeRemaining - 1);
       }, 1000);
     }
 
-    if (timeRemaining === 0) {
+    if (timeRemaining === 0 && selectedValue !== 0) {
       setGameOver(true);
       setStartGame(false);
     }
 
     return () => clearTimeout(timerId);
-  }, [startGame, timeRemaining, gameOver]);
+  }, [startGame, timeRemaining, gameOver, selectedValue]);
+
+  const handleQuitGame = () => {
+    setGameOver(true);
+    setStartGame(false);
+  };
 
   const handleWrongButton = () => {
     if (flag) {
@@ -166,7 +171,7 @@ export default function FlagQuiz() {
   const handleStartGame = () => {
     setStartGame(true);
     setGameOver(false);
-    setTimeRemaining(selectedValue * 60);
+    setTimeRemaining(selectedValue === 0 ? 0 : selectedValue * 60);
   };
 
   const handlePlayAgain = () => {
@@ -240,12 +245,18 @@ export default function FlagQuiz() {
       </div>
       <div className="stat-chip text-amber-300">
         <FontAwesomeIcon icon={faClock} />
-        <span>{timeRemaining}s</span>
+        <span>{selectedValue === 0 ? "Unlimited" : `${timeRemaining}s`}</span>
       </div>
       <div className="stat-chip text-purple-300">
         <FontAwesomeIcon icon={faTrophy} />
         <span>High {highScore}</span>
       </div>
+      <button
+        onClick={handleQuitGame}
+        className="stat-chip bg-rose-500/20 text-rose-200 hover:bg-rose-500/30 transition-colors cursor-pointer border-rose-500/30"
+      >
+        Quit
+      </button>
     </div>
   );
 
@@ -465,7 +476,7 @@ export default function FlagQuiz() {
             <h2 className="text-2xl font-bold">Choose your session length</h2>
           </div>
           <span className="text-4xl font-black text-white/80">
-            {selectedValue}m
+            {selectedValue === 0 ? "∞" : `${selectedValue}m`}
           </span>
         </div>
         <p className="text-white/60">
@@ -477,6 +488,9 @@ export default function FlagQuiz() {
           value={selectedValue}
           onChange={handleSelectChange}
         >
+          <option value={0} className="text-slate-900">
+            Unlimited
+          </option>
           {[...Array(5)].map((_, index) => (
             <option key={index + 1} value={index + 1} className="text-slate-900">
               {index + 1} minute
