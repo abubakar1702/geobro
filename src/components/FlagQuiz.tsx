@@ -153,6 +153,8 @@ export default function FlagQuiz() {
     if (flag) {
       const newHistory = [...history, { numericCode: flag.numericCode, status: "wrong" as const }];
       setHistory(newHistory);
+      setWrong(false);
+      setMessage(false);
       setShow(true);
       fetchData(newHistory);
     }
