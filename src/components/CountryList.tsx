@@ -79,7 +79,7 @@ const CountryList: React.FC = () => {
               Explore the atlas
             </p>
             <h1 className="text-3xl font-black md:text-4xl">
-              Discover every country's colors
+              Discover every country&apos;s colors
             </h1>
           </div>
           <input

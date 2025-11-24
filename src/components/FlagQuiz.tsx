@@ -11,7 +11,7 @@ import {
   faPlay,
   faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import axios, { AxiosResponse } from "axios";
 import {
   ComposableMap,
@@ -62,7 +62,7 @@ export default function FlagQuiz() {
   const [highScore, setHighScore] = useState(0);
   const [allCountries, setAllCountries] = useState<CountryData[]>([]);
 
-  const fetchData = async (currentHistory = history) => {
+  const fetchData = useCallback(async (currentHistory = history) => {
     try {
       setLoading(true);
       let countries = allCountries;
@@ -102,11 +102,11 @@ export default function FlagQuiz() {
       console.error("Error fetching country data:", error);
       setLoading(false);
     }
-  };
+  }, [allCountries, history]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

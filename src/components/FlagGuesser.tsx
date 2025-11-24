@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios, { AxiosResponse } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faTrophy, faArrowRight, faRotateRight } from "@fortawesome/free-solid-svg-icons";
@@ -61,20 +61,7 @@ export default function FlagGuesser() {
         if (stored) setHighScore(Number(stored));
     }, []);
 
-    useEffect(() => {
-        if (!loading && countries.length > 0 && !target) {
-            startRound();
-        }
-    }, [loading, countries]);
-
-    useEffect(() => {
-        if (score > highScore) {
-            setHighScore(score);
-            localStorage.setItem(HIGH_SCORE_KEY, String(score));
-        }
-    }, [score, highScore]);
-
-    const startRound = () => {
+    const startRound = useCallback(() => {
         if (countries.length < 4) return;
 
         const targetIndex = Math.floor(Math.random() * countries.length);
@@ -94,7 +81,20 @@ export default function FlagGuesser() {
         setOptions(newOptions);
         setAnswered(false);
         setSelectedOption(null);
-    };
+    }, [countries]);
+
+    useEffect(() => {
+        if (!loading && countries.length > 0 && !target) {
+            startRound();
+        }
+    }, [loading, countries, target, startRound]);
+
+    useEffect(() => {
+        if (score > highScore) {
+            setHighScore(score);
+            localStorage.setItem(HIGH_SCORE_KEY, String(score));
+        }
+    }, [score, highScore]);
 
     const handleGuess = (countryName: string) => {
         if (answered || !target) return;
