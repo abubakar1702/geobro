@@ -18,7 +18,13 @@ export default function Navbar() {
             href="/#map-stage"
             className="rounded-full border border-white/30 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
           >
-            Play Map Game
+            Map Game
+          </Link>
+          <Link
+            href="/flag-guess"
+            className="rounded-full border border-white/30 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+          >
+            Flag Guesser
           </Link>
           <Link
             href="/countries"
