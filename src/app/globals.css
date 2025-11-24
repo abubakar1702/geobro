@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  @apply bg-slate-950 text-slate-100;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -10,5 +20,23 @@
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/5 border border-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl;
+  }
+
+  .stat-chip {
+    @apply flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-sm font-semibold tracking-wide;
+  }
+
+  .primary-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-8 py-3 font-semibold text-white shadow-lg shadow-sky-500/30 transition hover:scale-[1.02] hover:shadow-xl hover:shadow-sky-500/40;
+  }
+
+  .secondary-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-8 py-3 font-semibold text-white border border-white/20 transition hover:bg-white/20;
+  }
 }
 

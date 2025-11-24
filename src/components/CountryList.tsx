@@ -5,13 +5,25 @@ import axios, { AxiosResponse } from "axios";
 
 interface CountryData {
   name: string;
-  flags: {
-    png: string;
-  };
+  flagUrl: string;
   region: string;
   subregion: string;
   area: number;
   capital: string;
+}
+
+interface RestCountry {
+  name: {
+    common: string;
+  };
+  flags: {
+    png?: string;
+    svg?: string;
+  };
+  region: string;
+  subregion?: string;
+  area?: number;
+  capital?: string[];
 }
 
 const CountryList: React.FC = () => {
@@ -24,11 +36,21 @@ const CountryList: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response: AxiosResponse<CountryData[]> = await axios.get(
-          "https://restcountries.com/v2/all"
+        const response: AxiosResponse<RestCountry[]> = await axios.get(
+          "https://restcountries.com/v3.1/all?fields=name,flags,region,subregion,area,capital"
         );
-        setCountries(response.data);
-        setFilteredCountries(response.data);
+        const mapped: CountryData[] = response.data
+          .map((country) => ({
+            name: country.name.common,
+            flagUrl: country.flags.png ?? country.flags.svg ?? "",
+            region: country.region,
+            subregion: country.subregion || "—",
+            area: country.area ?? 0,
+            capital: country.capital?.[0] ?? "—",
+          }))
+          .filter((country) => Boolean(country.flagUrl));
+        setCountries(mapped);
+        setFilteredCountries(mapped);
       } catch (error) {
         console.error("Error fetching country data:", error);
       } finally {
@@ -40,54 +62,80 @@ const CountryList: React.FC = () => {
   }, []);
 
   const handleSearch = (term: string) => {
-    setSearchTerm(term.toLowerCase());
+    setSearchTerm(term);
+    const normalized = term.toLowerCase();
     const filtered = countries.filter((country) =>
-      country.name.toLowerCase().includes(term)
+      country.name.toLowerCase().includes(normalized)
     );
     setFilteredCountries(filtered);
   };
 
   return (
-    <div>
-      <div className="m-4 flex justify-center">
-        <input
-          type="text"
-          placeholder="Search by country name"
-          className="p-4 border rounded-full w-96"
-          value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-      </div>
-      {loading && (
-        <div className="flex items-center justify-center h-full">
-          <div className="relative">
-            <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
-            <div className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
+    <section className="px-4 py-12 text-white">
+      <div className="mx-auto max-w-6xl space-y-10">
+        <div className="glass-panel flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-white/50">
+              Explore the atlas
+            </p>
+            <h1 className="text-3xl font-black md:text-4xl">
+              Discover every country's colors
+            </h1>
           </div>
+          <input
+            type="text"
+            placeholder="Search by country name"
+            className="w-full rounded-2xl border border-white/15 bg-white/5 px-5 py-4 text-lg font-semibold text-white placeholder:text-white/40 focus:border-sky-300 focus:outline-none focus:ring-0 md:w-96"
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
         </div>
-      )}
-      {!loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredCountries.map((country) => (
-            <div key={country.name} className="country-card p-4 border rounded-md flex flex-col items-center justify-center">
-              <img
-                src={country.flags.png}
-                alt={`Flag of ${country.name}`}
-                className="flag-image mb-2 shadow-md"
-                style={{ width: "250px", height: "auto" }}
-              />
-              <div>
-                <p className="font-bold">Name: {country.name}</p>
-                <p>Region: {country.region}</p>
-                <p>Subregion: {country.subregion}</p>
-                <p>Area: {country.area} sq km</p>
-                <p>Capital: {country.capital}</p>
-              </div>
+
+        {loading && (
+          <div className="flex items-center justify-center py-20">
+            <div className="relative">
+              <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-white/10"></div>
+              <div className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-sky-400 animate-spin"></div>
             </div>
-          ))}
-        </div>
-      )}
-    </div>
+          </div>
+        )}
+
+        {!loading && (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filteredCountries.map((country) => (
+              <article
+                key={country.name}
+                className="glass-panel flex flex-col overflow-hidden p-4"
+              >
+                <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-slate-900">
+                  <img
+                    src={country.flagUrl}
+                    alt={`Flag of ${country.name}`}
+                    className="h-40 w-full object-cover"
+                  />
+                </div>
+                <div className="mt-4 space-y-2 text-sm text-white/70">
+                  <h2 className="text-xl font-bold text-white">{country.name}</h2>
+                  <p>
+                    <span className="text-white/50">Region:</span> {country.region}
+                  </p>
+                  <p>
+                    <span className="text-white/50">Subregion:</span> {country.subregion}
+                  </p>
+                  <p>
+                    <span className="text-white/50">Area:</span>{" "}
+                    {country.area.toLocaleString()} km²
+                  </p>
+                  <p>
+                    <span className="text-white/50">Capital:</span> {country.capital}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 

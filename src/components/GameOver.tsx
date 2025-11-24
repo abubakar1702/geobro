@@ -1,34 +1,76 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRedo } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { faRedo, faCircleCheck, faCircleXmark, faTrophy } from "@fortawesome/free-solid-svg-icons";
 
 interface GameOverProps {
   score: number;
   right: number;
   wrong: number;
+  highScore: number;
   onPlayAgain: () => void;
 }
 
-export default function GameOver({ score, onPlayAgain, right, wrong  }: GameOverProps) {
-  const [playAgain, setPlayAgain] = useState(false)
+export default function GameOver({ score, onPlayAgain, right, wrong, highScore }: GameOverProps) {
+  const isPositive = score >= 0;
+  const unlockedRecord = highScore > 0 && score >= highScore;
 
-  const handlePlayAgain=()=>{
-    setPlayAgain(true)
-    onPlayAgain();
-  }
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <div className="text-center">
-        <h1 className="text-6xl p-4">Game Over</h1>
-        <h1 className="my-6 text-xl">Your score is: <span className={`${score < 0 ? "text-red-600" : "text-green-600"}`}>{score}</span></h1>
-        <h1 className="text-cernter">Right: <span className="text-green-600">{right}</span> | Wrong: <span className="text-red-600">{wrong}</span></h1>
+    <div className="glass-panel p-10 text-center space-y-8">
+      <div>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/40">
+          Session complete
+        </p>
+        <h1 className="text-5xl font-black">Game over</h1>
       </div>
 
-      <button onClick={handlePlayAgain} className="bg-sky-500 px-10 py-4 rounded flex items-center mt-4">
-        <span className="mr-2">
-          <FontAwesomeIcon icon={faRedo} />
-        </span>{" "}
-        Play Again
+      <div className="grid gap-4 text-white/80 md:grid-cols-4">
+        <div className="stat-chip flex-col items-start text-white">
+          <span className="text-xs uppercase tracking-[0.35em] text-white/50">
+            Final score
+          </span>
+          <span className={`text-4xl font-black ${isPositive ? "text-emerald-300" : "text-rose-300"}`}>
+            {score}
+          </span>
+        </div>
+        <div className="stat-chip flex-col items-start text-emerald-300">
+          <span className="text-xs uppercase tracking-[0.35em] text-white/50">
+            Correct
+          </span>
+          <span className="flex items-center gap-2 text-3xl font-black">
+            <FontAwesomeIcon icon={faCircleCheck} />
+            {right}
+          </span>
+        </div>
+        <div className="stat-chip flex-col items-start text-rose-300">
+          <span className="text-xs uppercase tracking-[0.35em] text-white/50">
+            Missed
+          </span>
+          <span className="flex items-center gap-2 text-3xl font-black">
+            <FontAwesomeIcon icon={faCircleXmark} />
+            {wrong}
+          </span>
+        </div>
+        <div className="stat-chip flex-col items-start text-purple-300">
+          <span className="text-xs uppercase tracking-[0.35em] text-white/50">
+            High score
+          </span>
+          <span className="flex items-center gap-2 text-3xl font-black">
+            <FontAwesomeIcon icon={faTrophy} />
+            {highScore}
+          </span>
+        </div>
+      </div>
+
+      <p className="text-lg text-white/70">
+        {unlockedRecord
+          ? "New high score unlocked! Keep the streak going."
+          : isPositive
+          ? "Amazing work! Ready to push that score even further?"
+          : "Every explorer stumbles. Ready for a redemption lap?"}
+      </p>
+
+      <button onClick={onPlayAgain} className="primary-btn mx-auto">
+        <FontAwesomeIcon icon={faRedo} />
+        Play again
       </button>
     </div>
   );
