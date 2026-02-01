@@ -33,6 +33,7 @@ export default function FlagGuesser() {
     const [loading, setLoading] = useState(true);
     const [answered, setAnswered] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [nextLoading, setNextLoading] = useState(false);
 
     useEffect(() => {
         const fetchCountries = async () => {
@@ -81,6 +82,7 @@ export default function FlagGuesser() {
         setOptions(newOptions);
         setAnswered(false);
         setSelectedOption(null);
+        setNextLoading(false);
     }, [countries]);
 
     useEffect(() => {
@@ -104,6 +106,11 @@ export default function FlagGuesser() {
 
         if (countryName === target.name) {
             setScore(s => s + 1);
+            setNextLoading(true);
+            // Automatically move to the next flag after 1.5 seconds
+            setTimeout(() => {
+                startRound();
+            }, 1500);
         } else {
             setScore(0);
         }
@@ -144,12 +151,19 @@ export default function FlagGuesser() {
             {/* Game Card */}
             {target && (
                 <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/50 shadow-2xl backdrop-blur-xl">
-                    <div className="flex min-h-[200px] md:min-h-[300px] items-center justify-center bg-slate-950/50 p-6 md:p-8">
-                        <img
-                            src={target.flagUrl}
-                            alt="Guess the flag"
-                            className="max-h-[160px] md:max-h-[240px] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
-                        />
+                    <div className="relative flex min-h-[200px] md:min-h-[300px] items-center justify-center bg-slate-950/50 p-6 md:p-8">
+                        {nextLoading ? (
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/10 border-t-emerald-400"></div>
+                                <p className="text-emerald-400 font-bold animate-pulse">Next Flag...</p>
+                            </div>
+                        ) : (
+                            <img
+                                src={target.flagUrl}
+                                alt="Guess the flag"
+                                className="max-h-[160px] md:max-h-[240px] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
+                            />
+                        )}
                     </div>
 
                     <div className="grid gap-3 p-6 sm:grid-cols-2">
@@ -170,7 +184,7 @@ export default function FlagGuesser() {
                                 <button
                                     key={option.code}
                                     onClick={() => handleGuess(option.name)}
-                                    disabled={answered}
+                                    disabled={answered || nextLoading}
                                     className={`flex items-center justify-center rounded-xl border-2 p-4 text-center font-bold transition-all active:scale-95 ${btnClass}`}
                                 >
                                     {option.name}
@@ -179,17 +193,13 @@ export default function FlagGuesser() {
                         })}
                     </div>
 
-                    {answered && (
+                    {answered && !nextLoading && selectedOption !== target.name && (
                         <div className="border-t border-white/10 bg-white/5 p-6">
                             <button
                                 onClick={startRound}
                                 className="primary-btn w-full justify-center py-4 text-lg"
                             >
-                                {selectedOption === target.name ? (
-                                    <>Next Flag <FontAwesomeIcon icon={faArrowRight} /></>
-                                ) : (
-                                    <>Play Again <FontAwesomeIcon icon={faRotateRight} /></>
-                                )}
+                                Play Again <FontAwesomeIcon icon={faRotateRight} />
                             </button>
                         </div>
                     )}
