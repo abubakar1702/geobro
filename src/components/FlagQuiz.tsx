@@ -232,30 +232,30 @@ export default function FlagQuiz() {
     "";
 
   const renderScoreboard = () => (
-    <div className="flex flex-wrap gap-3">
-      <div className="stat-chip text-emerald-300">
+    <div className="flex flex-wrap gap-2 md:gap-3">
+      <div className="stat-chip text-emerald-300 px-3 py-1.5 md:px-4 md:py-2">
         <FontAwesomeIcon icon={faBolt} />
-        <span>Score {score}</span>
+        <span className="hidden xs:inline">Score</span> {score}
       </div>
-      <div className="stat-chip text-cyan-300">
+      <div className="stat-chip text-cyan-300 px-3 py-1.5 md:px-4 md:py-2">
         <FontAwesomeIcon icon={faCircleCheck} />
-        <span>{rightAns} right</span>
+        <span>{rightAns}<span className="hidden xs:inline"> right</span></span>
       </div>
-      <div className="stat-chip text-rose-300">
+      <div className="stat-chip text-rose-300 px-3 py-1.5 md:px-4 md:py-2">
         <FontAwesomeIcon icon={faCircleXmark} />
-        <span>{wrongAns} wrong</span>
+        <span>{wrongAns}<span className="hidden xs:inline"> wrong</span></span>
       </div>
-      <div className="stat-chip text-amber-300">
+      <div className="stat-chip text-amber-300 px-3 py-1.5 md:px-4 md:py-2">
         <FontAwesomeIcon icon={faClock} />
-        <span>{selectedValue === 0 ? "Unlimited" : `${timeRemaining}s`}</span>
+        <span>{selectedValue === 0 ? "∞" : `${timeRemaining}s`}</span>
       </div>
-      <div className="stat-chip text-purple-300">
+      <div className="stat-chip text-purple-300 px-3 py-1.5 md:px-4 md:py-2">
         <FontAwesomeIcon icon={faTrophy} />
-        <span>High {highScore}</span>
+        <span className="hidden xs:inline">Best</span> {highScore}
       </div>
       <button
         onClick={handleQuitGame}
-        className="stat-chip bg-rose-500/20 text-rose-200 hover:bg-rose-500/30 transition-colors cursor-pointer border-rose-500/30"
+        className="stat-chip bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 transition-colors cursor-pointer border-rose-500/20 px-3 py-1.5 md:px-4 md:py-2"
       >
         Quit
       </button>
@@ -343,7 +343,7 @@ export default function FlagQuiz() {
           </div>
 
           <div className="lg:col-span-8">
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-xl h-full min-h-[500px]">
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-xl h-[400px] md:h-full md:min-h-[500px]">
               {loading ? (
                 <div className="flex h-full min-h-[400px] items-center justify-center">
                   <div className="relative">
@@ -444,12 +444,12 @@ export default function FlagQuiz() {
         <p className="text-sm uppercase tracking-[0.35em] text-white/50">
           Geography sprint
         </p>
-        <h1 className="text-4xl font-black leading-tight">
+        <h1 className="text-3xl font-black leading-tight md:text-4xl">
           Welcome to Ge
           <FontAwesomeIcon className="mx-2 text-emerald-400" icon={faEarth} />
           Bro
         </h1>
-        <p className="text-lg text-white/70">
+        <p className="text-base text-white/70 md:text-lg">
           Train your memory, travel the globe, and smash the leaderboard in this
           fast paced map challenge.
         </p>

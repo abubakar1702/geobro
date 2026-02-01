@@ -14,15 +14,15 @@ export default function GameOver({ score, onPlayAgain, right, wrong, highScore }
   const unlockedRecord = highScore > 0 && score >= highScore;
 
   return (
-    <div className="glass-panel p-10 text-center space-y-8">
+    <div className="glass-panel p-6 md:p-10 text-center space-y-6 md:space-y-8">
       <div>
-        <p className="text-sm uppercase tracking-[0.35em] text-white/40">
+        <p className="text-xs md:text-sm uppercase tracking-[0.35em] text-white/40">
           Session complete
         </p>
-        <h1 className="text-5xl font-black">Game over</h1>
+        <h1 className="text-4xl md:text-5xl font-black">Game over</h1>
       </div>
 
-      <div className="grid gap-4 text-white/80 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 text-white/80 md:grid-cols-4">
         <div className="stat-chip flex-col items-start text-white">
           <span className="text-xs uppercase tracking-[0.35em] text-white/50">
             Final score
@@ -64,8 +64,8 @@ export default function GameOver({ score, onPlayAgain, right, wrong, highScore }
         {unlockedRecord
           ? "New high score unlocked! Keep the streak going."
           : isPositive
-          ? "Amazing work! Ready to push that score even further?"
-          : "Every explorer stumbles. Ready for a redemption lap?"}
+            ? "Amazing work! Ready to push that score even further?"
+            : "Every explorer stumbles. Ready for a redemption lap?"}
       </p>
 
       <button onClick={onPlayAgain} className="primary-btn mx-auto">

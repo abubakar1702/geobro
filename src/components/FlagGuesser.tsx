@@ -120,23 +120,23 @@ export default function FlagGuesser() {
     return (
         <div className="mx-auto max-w-2xl space-y-8">
             {/* Header Stats */}
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400">
+            <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/10 bg-white/5 p-3 md:p-4 backdrop-blur-md">
+                <div className="flex items-center gap-2 md:gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
                         <FontAwesomeIcon icon={faBolt} />
                     </div>
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-wider text-white/50">Streak</p>
-                        <p className="text-xl font-black text-white">{score}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">Streak</p>
+                        <p className="text-lg md:text-xl font-black text-white">{score}</p>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500/20 text-purple-400">
+                <div className="flex items-center gap-2 md:gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400">
                         <FontAwesomeIcon icon={faTrophy} />
                     </div>
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-wider text-white/50">Best</p>
-                        <p className="text-xl font-black text-white">{highScore}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">Best</p>
+                        <p className="text-lg md:text-xl font-black text-white">{highScore}</p>
                     </div>
                 </div>
             </div>
@@ -144,11 +144,11 @@ export default function FlagGuesser() {
             {/* Game Card */}
             {target && (
                 <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/50 shadow-2xl backdrop-blur-xl">
-                    <div className="flex min-h-[300px] items-center justify-center bg-slate-950/50 p-8">
+                    <div className="flex min-h-[200px] md:min-h-[300px] items-center justify-center bg-slate-950/50 p-6 md:p-8">
                         <img
                             src={target.flagUrl}
                             alt="Guess the flag"
-                            className="max-h-[240px] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
+                            className="max-h-[160px] md:max-h-[240px] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
                         />
                     </div>
 

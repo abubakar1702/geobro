@@ -71,24 +71,26 @@ const CountryList: React.FC = () => {
   };
 
   return (
-    <section className="px-4 py-12 text-white">
-      <div className="mx-auto max-w-6xl space-y-10">
-        <div className="glass-panel flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-white/50">
+    <section className="px-4 py-8 md:py-12 text-white">
+      <div className="mx-auto max-w-6xl space-y-8 md:space-y-10">
+        <div className="glass-panel flex flex-col gap-6 p-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="text-center lg:text-left">
+            <p className="text-[10px] uppercase tracking-[0.35em] text-white/50 md:text-xs">
               Explore the atlas
             </p>
-            <h1 className="text-3xl font-black md:text-4xl">
+            <h1 className="mt-1 text-2xl font-black md:text-3xl lg:text-4xl">
               Discover every country&apos;s colors
             </h1>
           </div>
-          <input
-            type="text"
-            placeholder="Search by country name"
-            className="w-full rounded-2xl border border-white/15 bg-white/5 px-5 py-4 text-lg font-semibold text-white placeholder:text-white/40 focus:border-sky-300 focus:outline-none focus:ring-0 md:w-96"
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
+          <div className="relative w-full lg:w-96">
+            <input
+              type="text"
+              placeholder="Search by country name"
+              className="w-full rounded-2xl border border-white/15 bg-white/5 px-5 py-4 text-lg font-semibold text-white placeholder:text-white/40 focus:border-sky-300 focus:outline-none focus:ring-0"
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </div>
         </div>
 
         {loading && (
@@ -101,7 +103,7 @@ const CountryList: React.FC = () => {
         )}
 
         {!loading && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredCountries.map((country) => (
               <article
                 key={country.name}
