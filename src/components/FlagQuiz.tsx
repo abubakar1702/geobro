@@ -27,6 +27,7 @@ interface CountryData {
   flagUrl: string;
   code: string;
   numericCode: string;
+  region: string;
 }
 
 interface RestCountry {
@@ -39,6 +40,7 @@ interface RestCountry {
   };
   cca3: string;
   ccn3: string;
+  region: string;
 }
 
 const HIGH_SCORE_STORAGE_KEY = "geobro_high_score";
@@ -61,6 +63,14 @@ export default function FlagQuiz() {
   const [selectedValue, setSelectedValue] = useState<number>(1);
   const [highScore, setHighScore] = useState(0);
   const [allCountries, setAllCountries] = useState<CountryData[]>([]);
+  const [streak, setStreak] = useState(0);
+  const [clickedCountry, setClickedCountry] = useState<string | null>(null);
+  const [clickedCountryId, setClickedCountryId] = useState<string | null>(null);
+  const [showHint, setShowHint] = useState(false);
+  const [hintsRemaining, setHintsRemaining] = useState(3);
+  const [hintData, setHintData] = useState<{ region: string } | null>(null);
+  const [mapState, setMapState] = useState({ center: [0, 0] as [number, number], zoom: 1.4 });
+  const [geoCentroids, setGeoCentroids] = useState<Record<string, [number, number]>>({});
 
   const fetchData = useCallback(async (currentHistory = history) => {
     try {
@@ -68,8 +78,24 @@ export default function FlagQuiz() {
       let countries = allCountries;
 
       if (countries.length === 0) {
+        // Fetch map data to get valid IDs and centroids
+        const mapResponse = await axios.get(GEO_URL);
+        const geometries = mapResponse.data.objects.countries.geometries;
+        const validMapIds = new Set(geometries.map((g: any) => g.id));
+
+        // Simple centroid calculation from bbox or similar would be complex without libraries,
+        // but since we want to "focus", we can store the geometry and find a point.
+        // For 110m atlas, we can approximate centroids (usually provided in some versions, 
+        // but here we might need to manually map or use a helper)
+        setGeoCentroids(geometries.reduce((acc: any, g: any) => {
+          // This is a placeholder for centroid logic - in a real app we'd use d3-geo
+          // For now, let's just use a simplified version if available or leave it to be updated
+          acc[g.id] = [0, 0];
+          return acc;
+        }, {}));
+
         const response: AxiosResponse<RestCountry[]> = await axios.get(
-          "https://restcountries.com/v3.1/all?fields=name,flags,cca3,ccn3"
+          "https://restcountries.com/v3.1/all?fields=name,flags,cca3,ccn3,region"
         );
         countries = response.data
           .map((country) => ({
@@ -77,8 +103,14 @@ export default function FlagQuiz() {
             flagUrl: country.flags.png ?? country.flags.svg ?? "",
             code: country.cca3,
             numericCode: country.ccn3,
+            region: country.region,
           }))
-          .filter((country) => Boolean(country.flagUrl) && Boolean(country.code) && Boolean(country.numericCode));
+          .filter((country) =>
+            Boolean(country.flagUrl) &&
+            Boolean(country.code) &&
+            Boolean(country.numericCode) &&
+            validMapIds.has(country.numericCode)
+          );
         setAllCountries(countries);
       }
 
@@ -156,6 +188,10 @@ export default function FlagQuiz() {
       setWrong(false);
       setMessage(false);
       setShow(true);
+      setClickedCountry(null);
+      setClickedCountryId(null);
+      setShowHint(false);
+      setMapState({ center: [0, 0], zoom: 1.4 });
       fetchData(newHistory);
     }
   };
@@ -167,6 +203,10 @@ export default function FlagQuiz() {
       setMessage(false);
       setWrong(false);
       setShow(true);
+      setClickedCountry(null);
+      setClickedCountryId(null);
+      setShowHint(false);
+      setMapState({ center: [0, 0], zoom: 1.4 });
       fetchData(newHistory);
     }
   };
@@ -189,6 +229,10 @@ export default function FlagQuiz() {
     setStartGame(true);
     setRightAns(0);
     setWrongAns(0);
+    setStreak(0);
+    setClickedCountry(null);
+    setHintsRemaining(3);
+    setShowHint(false);
     fetchData([]);
   };
 
@@ -201,35 +245,73 @@ export default function FlagQuiz() {
   const normalizeName = (name?: string | null) =>
     (name ?? "").toLowerCase().replace(/[^a-z]/g, "");
 
-  const handleMapGuess = (geoId: string) => {
+  const handleMapGuess = (geoId: string, geoName: string) => {
     if (!flag || message || !show) return;
     const isCorrect = geoId === flag.numericCode;
 
     if (isCorrect) {
+      const newStreak = streak + 1;
+      setStreak(newStreak);
+
+      let points = 10;
+      if (newStreak >= 5) points = 30; // 3x multiplier
+      else if (newStreak >= 3) points = 20; // 2x multiplier
+
       setMessage(true);
-      setScore((prev) => prev + 10);
+      setScore((prev) => prev + points);
       setRightAns((prev) => prev + 1);
       setWrong(false);
     } else {
-      setScore((prev) => prev - 10);
+      setStreak(0);
+      setScore((prev) => Math.max(0, prev - 10));
       setWrongAns((prev) => prev + 1);
       setShow(false);
       setWrong(true);
+      setClickedCountry(geoName);
+      setClickedCountryId(geoId);
+
     }
   };
 
-  const extractGeoName = (properties: Record<string, unknown>) =>
+  const useHint = () => {
+    if (hintsRemaining > 0 && flag && !showHint) {
+      setHintData({ region: flag.region });
+      setShowHint(true);
+      setHintsRemaining(prev => prev - 1);
+    }
+  };
+
+  const extractGeoName = (properties: any) =>
     (properties?.NAME_LONG as string) ??
     (properties?.ADMIN as string) ??
     (properties?.NAME as string) ??
+    (properties?.name as string) ??
     (properties?.formal_en as string) ??
     "";
 
-  const extractGeoCode = (properties: Record<string, unknown>) =>
+  const extractGeoCode = (properties: any) =>
     (properties?.ISO_A3 as string) ??
     (properties?.ADM0_A3 as string) ??
     (properties?.WB_A3 as string) ??
     "";
+
+  // Helper to extract center from geography
+  const getCenter = (geo: Feature): [number, number] => {
+    // This is a fallback to find a point inside the polygon
+    if (geo.geometry.type === "Polygon") {
+      const coords = (geo.geometry as any).coordinates[0][0];
+      return [coords[0], coords[1]];
+    } else if (geo.geometry.type === "MultiPolygon") {
+      const coords = (geo.geometry as any).coordinates[0][0][0];
+      return [coords[0], coords[1]];
+    }
+    return [0, 0];
+  };
+
+  const handleMapFocus = (geo: Feature) => {
+    const coords = getCenter(geo);
+    setMapState({ center: coords, zoom: 3 });
+  };
 
   const renderScoreboard = () => (
     <div className="flex flex-wrap gap-2 md:gap-3">
@@ -253,6 +335,12 @@ export default function FlagQuiz() {
         <FontAwesomeIcon icon={faTrophy} />
         <span className="hidden xs:inline">Best</span> {highScore}
       </div>
+      {streak > 1 && (
+        <div className="stat-chip bg-orange-500/20 text-orange-400 border-orange-500/30 animate-bounce">
+          <FontAwesomeIcon icon={faBolt} />
+          <span>{streak} Streak! {streak >= 5 ? '(3x)' : streak >= 3 ? '(2x)' : ''}</span>
+        </div>
+      )}
       <button
         onClick={handleQuitGame}
         className="stat-chip bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 transition-colors cursor-pointer border-rose-500/20 px-3 py-1.5 md:px-4 md:py-2"
@@ -304,6 +392,26 @@ export default function FlagQuiz() {
                     </p>
                   </div>
                 </div>
+
+                {!message && !wrong && (
+                  <div className="mt-4 pt-4 border-t border-white/5">
+                    {showHint ? (
+                      <div className="bg-sky-500/10 border border-sky-500/30 rounded-xl p-3 animate-in fade-in zoom-in-95 text-center">
+                        <p className="text-xs text-sky-300 font-bold uppercase tracking-wider mb-1">Region Hint</p>
+                        <p className="text-white text-lg font-bold">{hintData?.region}</p>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={useHint}
+                        disabled={hintsRemaining === 0}
+                        className="w-full py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-30 border border-sky-500/10 active:scale-95"
+                      >
+                        <FontAwesomeIcon icon={faEarth} className="mr-2" />
+                        Reveal Region ({hintsRemaining} left)
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -314,7 +422,7 @@ export default function FlagQuiz() {
                 </p>
                 <h3 className="mt-2 text-2xl font-black text-white">{flag?.name}</h3>
                 <p className="mt-2 text-sm text-white/70">
-                  You pinpointed the right country. +10 exploration points awarded.
+                  Great job! {streak >= 5 ? '3x MEGA STREAK! (+30 points)' : streak >= 3 ? '2x STREAK! (+20 points)' : '+10 exploration points awarded.'}
                 </p>
                 <div className="mt-6">
                   <button onClick={handleNextButton} className="primary-btn w-full justify-center">
@@ -331,7 +439,7 @@ export default function FlagQuiz() {
                 </p>
                 <h3 className="mt-2 text-2xl font-black text-white">{flag?.name}</h3>
                 <p className="mt-2 text-sm text-white/70">
-                  That wasn’t the right location. -10 points this time.
+                  That wasn’t it! You clicked <strong>{clickedCountry || "somewhere else"}</strong>.
                 </p>
                 <div className="mt-6">
                   <button onClick={handleWrongButton} className="secondary-btn w-full justify-center">
@@ -357,7 +465,9 @@ export default function FlagQuiz() {
                   style={{ width: "100%", height: "100%" }}
                 >
                   <ZoomableGroup
-                    zoom={1.4}
+                    zoom={mapState.zoom}
+                    center={mapState.center}
+                    onMoveEnd={(s) => setMapState({ center: s.coordinates as [number, number], zoom: s.zoom })}
                     minZoom={0.9}
                     maxZoom={8}
                     translateExtent={[
@@ -371,6 +481,7 @@ export default function FlagQuiz() {
                           const key =
                             (geo as { rsmKey?: string }).rsmKey ?? `geo-${index}`;
                           const geoId = (geo.id as string) ?? "";
+                          const name = extractGeoName(geo.properties);
 
                           // Check history first
                           const historyItem = history.find(h => h.numericCode === geoId);
@@ -386,6 +497,11 @@ export default function FlagQuiz() {
                           const shouldHighlightWrong =
                             (isTarget && wrong) || (historyItem?.status === 'wrong');
 
+                          // Call focus if wrong and this is target
+                          if (isTarget && wrong && mapState.zoom === 1.4) {
+                            setTimeout(() => handleMapFocus(geo), 100);
+                          }
+
                           const baseFill = "#f8fafc";
                           const highlightFill = shouldHighlightCorrect
                             ? "#22c55e"
@@ -396,7 +512,7 @@ export default function FlagQuiz() {
                             <Geography
                               key={key}
                               geography={geo}
-                              onClick={() => handleMapGuess(geoId)}
+                              onClick={() => handleMapGuess(geoId, name)}
                               style={{
                                 default: {
                                   fill: highlightFill,
