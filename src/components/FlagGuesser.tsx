@@ -118,8 +118,8 @@ export default function FlagGuesser() {
 
     if (loading) {
         return (
-            <div className="flex min-h-[50vh] items-center justify-center text-white">
-                <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-sky-400"></div>
+            <div className="flex min-h-[50vh] items-center justify-center text-slate-700 dark:text-white">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200/80 border-t-sky-400 dark:border-white/20"></div>
             </div>
         );
     }
@@ -127,14 +127,14 @@ export default function FlagGuesser() {
     return (
         <div className="mx-auto max-w-2xl space-y-8">
             {/* Header Stats */}
-            <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/10 bg-white/5 p-3 md:p-4 backdrop-blur-md">
+            <div className="flex items-center justify-between gap-2 rounded-2xl border border-slate-200/80 bg-white/80 p-3 md:p-4 backdrop-blur-md dark:border-white/10 dark:bg-white/5">
                 <div className="flex items-center gap-2 md:gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
                         <FontAwesomeIcon icon={faBolt} />
                     </div>
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">Streak</p>
-                        <p className="text-lg md:text-xl font-black text-white">{score}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-white/50">Streak</p>
+                        <p className="text-lg md:text-xl font-black text-slate-900 dark:text-white">{score}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 md:gap-3">
@@ -142,41 +142,41 @@ export default function FlagGuesser() {
                         <FontAwesomeIcon icon={faTrophy} />
                     </div>
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">Best</p>
-                        <p className="text-lg md:text-xl font-black text-white">{highScore}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-white/50">Best</p>
+                        <p className="text-lg md:text-xl font-black text-slate-900 dark:text-white">{highScore}</p>
                     </div>
                 </div>
             </div>
 
             {/* Game Card */}
             {target && (
-                <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/50 shadow-2xl backdrop-blur-xl">
-                    <div className="relative flex min-h-[200px] md:min-h-[300px] items-center justify-center bg-slate-950/50 p-6 md:p-8">
+                <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/90 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/50">
+                    <div className="relative flex min-h-[200px] md:min-h-[300px] items-center justify-center bg-slate-100/80 p-6 md:p-8 dark:bg-slate-950/50">
                         {nextLoading ? (
                             <div className="flex flex-col items-center gap-4">
-                                <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/10 border-t-emerald-400"></div>
+                                <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200/80 border-t-emerald-400 dark:border-white/10"></div>
                                 <p className="text-emerald-400 font-bold animate-pulse">Next Flag...</p>
                             </div>
                         ) : (
                             <img
                                 src={target.flagUrl}
                                 alt="Guess the flag"
-                                className="max-h-[160px] md:max-h-[240px] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
+                                className="max-h-[160px] md:max-h-[240px] w-auto rounded-lg shadow-2xl ring-1 ring-slate-200/80 dark:ring-white/10"
                             />
                         )}
                     </div>
 
                     <div className="grid gap-3 p-6 sm:grid-cols-2">
                         {options.map((option) => {
-                            let btnClass = "border-white/10 bg-white/5 hover:bg-white/10 text-white";
+                            let btnClass = "border-slate-200/80 bg-white/80 hover:bg-slate-900/5 text-slate-900 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white";
 
                             if (answered) {
                                 if (option.name === target.name) {
-                                    btnClass = "border-emerald-500 bg-emerald-500/20 text-emerald-100";
+                                    btnClass = "border-emerald-500 bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-100";
                                 } else if (option.name === selectedOption) {
-                                    btnClass = "border-rose-500 bg-rose-500/20 text-rose-100";
+                                    btnClass = "border-rose-500 bg-rose-500/15 text-rose-700 dark:bg-rose-500/20 dark:text-rose-100";
                                 } else {
-                                    btnClass = "border-white/5 bg-white/5 text-white/30";
+                                    btnClass = "border-slate-200/60 bg-white/70 text-slate-400 dark:border-white/5 dark:bg-white/5 dark:text-white/30";
                                 }
                             }
 
@@ -194,7 +194,7 @@ export default function FlagGuesser() {
                     </div>
 
                     {answered && !nextLoading && selectedOption !== target.name && (
-                        <div className="border-t border-white/10 bg-white/5 p-6">
+                        <div className="border-t border-slate-200/80 bg-white/80 p-6 dark:border-white/10 dark:bg-white/5">
                             <button
                                 onClick={startRound}
                                 className="primary-btn w-full justify-center py-4 text-lg"

@@ -3,13 +3,17 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   scroll-behavior: smooth;
+}
+
+.dark {
+  color-scheme: dark;
 }
 
 body {
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  @apply bg-slate-950 text-slate-100 overflow-x-hidden;
+  @apply bg-slate-50 text-slate-900 overflow-x-hidden dark:bg-slate-950 dark:text-slate-100;
 }
 
 @keyframes spin {
@@ -24,11 +28,11 @@ body {
 
 @layer components {
   .glass-panel {
-    @apply bg-white/5 border border-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl;
+    @apply bg-white/80 border border-slate-200/70 backdrop-blur-2xl rounded-3xl shadow-xl shadow-slate-200/60 dark:bg-white/5 dark:border-white/10 dark:shadow-2xl dark:shadow-black/40;
   }
 
   .stat-chip {
-    @apply flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-sm font-semibold tracking-wide;
+    @apply flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/5 border border-slate-200/80 text-sm font-semibold tracking-wide text-slate-700 dark:bg-white/10 dark:border-white/10 dark:text-slate-100;
   }
 
   .primary-btn {
@@ -36,7 +40,6 @@ body {
   }
 
   .secondary-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-8 py-3 font-semibold text-white border border-white/20 transition hover:bg-white/20;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-slate-900/5 px-8 py-3 font-semibold text-slate-900 border border-slate-200/80 transition hover:bg-slate-900/10 dark:bg-white/10 dark:text-white dark:border-white/20 dark:hover:bg-white/20;
   }
 }
-

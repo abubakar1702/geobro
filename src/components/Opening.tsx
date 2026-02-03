@@ -3,7 +3,7 @@ import { faArrowRight, faEarth } from "@fortawesome/free-solid-svg-icons";
 
 export default function Opening() {
   return (
-    <div className="fle p-8 flex-col">
+    <div className="fle p-8 flex-col text-slate-900 dark:text-white">
       <h1 className="p-4 text-xl text-center font-bold">Welcome to</h1>
       <h1 className="text-center text-4xl">
         <span className="p-4 text-2xl font-bold">
@@ -13,7 +13,7 @@ export default function Opening() {
         </span>
       </h1>
       <div className="flex justify-center my-8">
-        <select className="p-2 rounded-md bg-slate-500 text-white">
+        <select className="p-2 rounded-md border border-slate-200/80 bg-white text-slate-900 dark:border-white/10 dark:bg-slate-500 dark:text-white">
           {[...Array(10)].map((_, index) => (
             <option key={index + 1} value={index + 1}>
               {index + 1} minute

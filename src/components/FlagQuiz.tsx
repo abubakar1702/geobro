@@ -360,7 +360,7 @@ export default function FlagQuiz() {
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm uppercase tracking-[0.35em] text-white/50">
+              <p className="text-sm uppercase tracking-[0.35em] text-slate-500 dark:text-white/50">
                 Round in progress
               </p>
               <h2 className="text-3xl font-black md:text-4xl">
@@ -374,31 +374,31 @@ export default function FlagQuiz() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           <div className="lg:col-span-4 space-y-6">
             {!loading && flag?.flagUrl && (
-              <div className="glass-panel bg-slate-950/60 border-white/5 p-6">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/60">
+              <div className="glass-panel bg-white/80 border-slate-200/70 p-6 dark:bg-slate-950/60 dark:border-white/5">
+                <p className="text-xs uppercase tracking-[0.4em] text-slate-500 dark:text-white/60">
                   Target flag
                 </p>
                 <div className="mt-4 flex flex-col gap-4">
                   <img
                     src={flag.flagUrl}
                     alt={`Flag of ${flag.name}`}
-                    className="w-full rounded-2xl border border-white/10 object-contain bg-slate-900 shadow-lg"
+                    className="w-full rounded-2xl border border-slate-200/80 object-contain bg-slate-100 shadow-lg dark:border-white/10 dark:bg-slate-900"
                   />
                   <div className="space-y-1">
-                    <p className="text-sm text-white/60">Country to locate</p>
-                    <p className="text-2xl font-black text-white leading-tight">{flag.name}</p>
-                    <p className="text-sm text-white/50">
+                    <p className="text-sm text-slate-500 dark:text-white/60">Country to locate</p>
+                    <p className="text-2xl font-black text-slate-900 dark:text-white leading-tight">{flag.name}</p>
+                    <p className="text-sm text-slate-500 dark:text-white/50">
                       Tap the map to pin location.
                     </p>
                   </div>
                 </div>
 
                 {!message && !wrong && (
-                  <div className="mt-4 pt-4 border-t border-white/5">
+                  <div className="mt-4 pt-4 border-t border-slate-200/70 dark:border-white/5">
                     {showHint ? (
                       <div className="bg-sky-500/10 border border-sky-500/30 rounded-xl p-3 animate-in fade-in zoom-in-95 text-center">
                         <p className="text-xs text-sky-300 font-bold uppercase tracking-wider mb-1">Region Hint</p>
-                        <p className="text-white text-lg font-bold">{hintData?.region}</p>
+                        <p className="text-slate-900 dark:text-white text-lg font-bold">{hintData?.region}</p>
                       </div>
                     ) : (
                       <button
@@ -420,8 +420,8 @@ export default function FlagQuiz() {
                 <p className="text-emerald-300 font-semibold uppercase tracking-[0.35em] text-xs">
                   Great job!
                 </p>
-                <h3 className="mt-2 text-2xl font-black text-white">{flag?.name}</h3>
-                <p className="mt-2 text-sm text-white/70">
+                <h3 className="mt-2 text-2xl font-black text-slate-900 dark:text-white">{flag?.name}</h3>
+                <p className="mt-2 text-sm text-slate-600 dark:text-white/70">
                   Great job! {streak >= 5 ? '3x MEGA STREAK! (+30 points)' : streak >= 3 ? '2x STREAK! (+20 points)' : '+10 exploration points awarded.'}
                 </p>
                 <div className="mt-6">
@@ -437,8 +437,8 @@ export default function FlagQuiz() {
                 <p className="text-rose-300 font-semibold uppercase tracking-[0.35em] text-xs">
                   Oops!
                 </p>
-                <h3 className="mt-2 text-2xl font-black text-white">{flag?.name}</h3>
-                <p className="mt-2 text-sm text-white/70">
+                <h3 className="mt-2 text-2xl font-black text-slate-900 dark:text-white">{flag?.name}</h3>
+                <p className="mt-2 text-sm text-slate-600 dark:text-white/70">
                   That wasn’t it! You clicked <strong>{clickedCountry || "somewhere else"}</strong>.
                 </p>
                 <div className="mt-6">
@@ -451,11 +451,11 @@ export default function FlagQuiz() {
           </div>
 
           <div className="lg:col-span-8">
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-xl h-[400px] md:h-full md:min-h-[500px]">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl h-[400px] md:h-full md:min-h-[500px] dark:border-white/10 dark:bg-white/5">
               {loading ? (
                 <div className="flex h-full min-h-[400px] items-center justify-center">
                   <div className="relative">
-                    <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-white/10"></div>
+                    <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-slate-200/80 dark:border-white/10"></div>
                     <div className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-sky-400 animate-spin"></div>
                   </div>
                 </div>
@@ -545,7 +545,7 @@ export default function FlagQuiz() {
                 </ComposableMap>
               )}
               {!isInteractive && !loading && (
-                <div className="pointer-events-none absolute inset-0 bg-slate-950/60"></div>
+                <div className="pointer-events-none absolute inset-0 bg-white/70 dark:bg-slate-950/60"></div>
               )}
             </div>
           </div>
@@ -557,7 +557,7 @@ export default function FlagQuiz() {
   const renderLanding = () => (
     <div className="grid gap-10 md:grid-cols-2">
       <div className="glass-panel p-8 space-y-6">
-        <p className="text-sm uppercase tracking-[0.35em] text-white/50">
+        <p className="text-sm uppercase tracking-[0.35em] text-slate-500 dark:text-white/50">
           Geography sprint
         </p>
         <h1 className="text-3xl font-black leading-tight md:text-4xl">
@@ -565,7 +565,7 @@ export default function FlagQuiz() {
           <FontAwesomeIcon className="mx-2 text-emerald-400" icon={faEarth} />
           Bro
         </h1>
-        <p className="text-base text-white/70 md:text-lg">
+        <p className="text-base text-slate-600 dark:text-white/70 md:text-lg">
           Train your memory, travel the globe, and smash the leaderboard in this
           fast paced map challenge.
         </p>
@@ -588,21 +588,21 @@ export default function FlagQuiz() {
       <div className="glass-panel p-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.45em] text-white/40">
+            <p className="text-xs uppercase tracking-[0.45em] text-slate-500 dark:text-white/40">
               Pre-flight
             </p>
             <h2 className="text-2xl font-bold">Choose your session length</h2>
           </div>
-          <span className="text-4xl font-black text-white/80">
+          <span className="text-4xl font-black text-slate-700 dark:text-white/80">
             {selectedValue === 0 ? "∞" : `${selectedValue}m`}
           </span>
         </div>
-        <p className="text-white/60">
+        <p className="text-slate-600 dark:text-white/60">
           Current best run:{" "}
-          <span className="font-semibold text-white">{highScore}</span>
+          <span className="font-semibold text-slate-900 dark:text-white">{highScore}</span>
         </p>
         <select
-          className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-4 text-lg font-semibold text-white focus:border-sky-300 focus:outline-none focus:ring-0"
+          className="w-full rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-4 text-lg font-semibold text-slate-900 focus:border-sky-300 focus:outline-none focus:ring-0 dark:border-white/15 dark:bg-white/5 dark:text-white"
           value={selectedValue}
           onChange={handleSelectChange}
         >
@@ -623,9 +623,9 @@ export default function FlagQuiz() {
   );
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 px-4 py-4 text-white">
-      <div className="pointer-events-none absolute inset-x-0 top-10 mx-auto h-96 w-96 rounded-full bg-sky-500/40 blur-[150px]"></div>
-      <div className="pointer-events-none absolute bottom-10 right-10 h-72 w-72 rounded-full bg-emerald-400/30 blur-[140px]"></div>
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100 px-4 py-4 text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-white">
+      <div className="pointer-events-none absolute inset-x-0 top-10 mx-auto h-96 w-96 rounded-full bg-sky-500/30 blur-[150px] dark:bg-sky-500/40"></div>
+      <div className="pointer-events-none absolute bottom-10 right-10 h-72 w-72 rounded-full bg-emerald-400/20 blur-[140px] dark:bg-emerald-400/30"></div>
       <div className="relative z-10 mx-auto flex max-w-[1400px] flex-col gap-10">
         {!startGame && !gameOver && renderLanding()}
         {startGame && !gameOver && renderFlagStage()}
